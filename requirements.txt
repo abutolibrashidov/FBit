@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+aiogram>=3.13.0
+sqlalchemy
+alembic
+asyncpg>=0.30.0
+pydantic-settings
+python-dotenv
+redis
+loguru
+pyyaml
+httpx
+jinja2
+python-multipart
+APScheduler
+python-jose[cryptography]
