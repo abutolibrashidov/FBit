@@ -16,11 +16,22 @@ export const setAuthToken = (token) => {
 
 export const logout = () => {
     setAuthToken(null);
+    window.location.href = '/login';
 };
 
 const token = localStorage.getItem('adminToken');
 if (token) {
     setAuthToken(token);
 }
+
+api.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+            logout();
+        }
+        return Promise.reject(error);
+    }
+);
 
 export default api;
