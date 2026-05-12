@@ -1,13 +1,11 @@
-import asyncio
 import logging
 import sys
-import httpx
 from aiogram import Bot, Dispatcher
 from aiogram.enums import ParseMode
 from aiogram.client.default import DefaultBotProperties
-from fastapi import FastAPI
+from aiogram.types import Update
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-import uvicorn
 
 from app.core.config import settings
 from app.bot.handlers import setup_handlers
@@ -24,33 +22,23 @@ dp = Dispatcher()
 from contextlib import asynccontextmanager
 
 
-async def keep_alive_loop():
-    """Ping /health every 4 minutes to prevent Render free tier cold starts."""
-    await asyncio.sleep(30)  # Wait for server to be fully ready
-    while True:
-        try:
-            async with httpx.AsyncClient() as client:
-                await client.get("http://localhost:8000/health", timeout=10)
-            logger.debug("Keep-alive ping sent")
-        except Exception:
-            pass  # Fail silently
-        await asyncio.sleep(240)  # 4 minutes
-
-
 # FastAPI lifespan for startup/shutdown
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Setup
+    # Setup handlers
     setup_handlers(dp)
-    polling_task = asyncio.create_task(dp.start_polling(bot))
-    keep_alive_task = asyncio.create_task(keep_alive_loop())
-    logger.info("Bot started and FastAPI app initialized.")
+    
+    # Set Telegram webhook
+    webhook_url = f"{settings.BASE_URL}/webhook"
+    await bot.set_webhook(webhook_url, drop_pending_updates=True)
+    logger.info(f"Bot webhook set to: {webhook_url}")
+    
     yield
+    
     # Shutdown
+    await bot.delete_webhook()
     await bot.session.close()
-    polling_task.cancel()
-    keep_alive_task.cancel()
-    logger.info("Application shut down.")
+    logger.info("Application shut down and webhook deleted.")
 
 # FastAPI setup
 app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
@@ -66,11 +54,18 @@ app.add_middleware(
 
 app.include_router(admin_router, prefix="/admin")
 
+@app.post("/webhook")
+async def telegram_webhook(request: Request):
+    """Endpoint for Telegram Webhook updates."""
+    try:
+        update_data = await request.json()
+        update = Update.model_validate(update_data)
+        await dp.feed_update(bot, update)
+        return {"ok": True}
+    except Exception as e:
+        logger.error(f"Error processing webhook: {e}")
+        return JSONResponse(content={"error": str(e)}, status_code=500)
 
 @app.get("/health")
 async def health_check():
     return {"status": "alive"}
-
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
