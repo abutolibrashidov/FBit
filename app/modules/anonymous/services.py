@@ -2,8 +2,8 @@ from typing import Optional, List
 import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.anonymous.models import AnonymousMessage
-from app.services.notifications import NotificationService
+from modules.anonymous.models import AnonymousMessage
+from services.notifications import NotificationService
 
 class AnonymousMessageService:
     def __init__(self, session: AsyncSession):

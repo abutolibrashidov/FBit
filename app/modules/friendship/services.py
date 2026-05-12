@@ -2,7 +2,7 @@ from typing import Optional, List, Dict
 import uuid
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.friendship.models import Question, FriendshipTest, FriendshipTestResult
+from modules.friendship.models import Question, FriendshipTest, FriendshipTestResult
 from datetime import datetime, timedelta
 from pytz import timezone
 

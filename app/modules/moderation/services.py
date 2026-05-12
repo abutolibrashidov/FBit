@@ -3,8 +3,8 @@ import uuid
 from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.moderation.models import Report
-from app.modules.users.models import User
+from modules.moderation.models import Report
+from modules.users.models import User
 
 class ModerationService:
     def __init__(self, session: AsyncSession):

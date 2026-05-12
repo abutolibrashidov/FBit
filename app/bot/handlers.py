@@ -3,10 +3,10 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.texts import UzbekTexts
-from app.bot.keyboards import get_main_keyboard
-from app.modules.users.services import UserService
-from app.database.session import async_session
+from core.texts import UzbekTexts
+from bot.keyboards import get_main_keyboard
+from modules.users.services import UserService
+from database.session import async_session
 
 router = Router()
 
@@ -44,7 +44,7 @@ async def start_cmd(message: types.Message, state: FSMContext):
             referred_by_id=referral_id
         )
 
-        from app.modules.analytics.services import AnalyticsService
+        from modules.analytics.services import AnalyticsService
         analytics = AnalyticsService(session)
         await analytics.track_event(user.id, "start", {"ref": referral_id})
 
@@ -53,21 +53,21 @@ async def start_cmd(message: types.Message, state: FSMContext):
             return
             
         if anon_receiver_id and anon_receiver_id != message.from_user.id:
-            from app.modules.anonymous.handlers import handle_anonymous_start
+            from modules.anonymous.handlers import handle_anonymous_start
             await handle_anonymous_start(message, anon_receiver_id, state)
             return
         elif anon_receiver_id == message.from_user.id:
             await message.answer("Siz o'zingizga anonim xabar yubora olmaysiz! 😅")
             
         if friend_owner_id:
-            from app.modules.friendship.handlers import handle_friend_start
+            from modules.friendship.handlers import handle_friend_start
             await handle_friend_start(message, friend_owner_id, state)
             return
             
         poll_id_str = locals().get('poll_id_str')
         if poll_id_str:
             if UXControlLayer.can_participate_in_polls(user):
-                from app.modules.polls.handlers import handle_poll_start
+                from modules.polls.handlers import handle_poll_start
                 await handle_poll_start(message, poll_id_str, state)
             else:
                 await message.answer("Siz so'rovnomalarda qatnashish ruxsatini o'chirgansiz. Sozlamalar orqali yoqing. 🔒")
@@ -76,11 +76,11 @@ async def start_cmd(message: types.Message, state: FSMContext):
         await message.answer(UzbekTexts.WELCOME, reply_markup=get_main_keyboard())
 
 def setup_handlers(dp):
-    from app.modules.anonymous.handlers import router as anonymous_router
-    from app.modules.friendship.handlers import router as friendship_router
-    from app.modules.polls.handlers import router as polls_router
-    from app.modules.inbox.handlers import router as inbox_router
-    from app.modules.users.handlers import router as users_router
+    from modules.anonymous.handlers import router as anonymous_router
+    from modules.friendship.handlers import router as friendship_router
+    from modules.polls.handlers import router as polls_router
+    from modules.inbox.handlers import router as inbox_router
+    from modules.users.handlers import router as users_router
     
     dp.include_router(router)
     dp.include_router(users_router)

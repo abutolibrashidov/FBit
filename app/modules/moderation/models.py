@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import BigInteger, String, DateTime, func, ForeignKey, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.database.session import Base
+from database.session import Base
 
 class Report(Base):
     __tablename__ = "reports"

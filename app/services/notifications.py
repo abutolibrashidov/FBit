@@ -1,5 +1,5 @@
 from aiogram import Bot
-from app.core.config import settings
+from core.config import settings
 
 class NotificationService:
     def __init__(self, bot: Bot):
@@ -14,7 +14,7 @@ class NotificationService:
 
     async def notify_new_anonymous_message(self, user_id: int, message_id: str, content: str):
         from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-        from app.core.texts import UzbekTexts
+        from core.texts import UzbekTexts
         
         text = UzbekTexts.NEW_ANON_MSG.format(content=content)
         keyboard = InlineKeyboardMarkup(
@@ -28,7 +28,7 @@ class NotificationService:
         await self.send_message(user_id, text, reply_markup=keyboard)
 
     async def notify_reply_message(self, user_id: int, content: str):
-        from app.core.texts import UzbekTexts
+        from core.texts import UzbekTexts
         text = UzbekTexts.NEW_REPLY_MSG.format(content=content)
         await self.send_message(user_id, text)
 

@@ -3,9 +3,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.texts import UzbekTexts
-from app.modules.friendship.services import FriendshipService
-from app.database.session import async_session
+from core.texts import UzbekTexts
+from modules.friendship.services import FriendshipService
+from database.session import async_session
 
 router = Router()
 
@@ -71,7 +71,7 @@ async def process_question(message: types.Message, state: FSMContext):
             
             bot_info = await message.bot.get_me()
             link = f"https://t.me/{bot_info.username}?start=friend_{message.from_user.id}"
-            from app.bot.keyboards import get_main_keyboard
+            from bot.keyboards import get_main_keyboard
             await message.answer(UzbekTexts.FRIENDSHIP_LINK.format(link=link), reply_markup=get_main_keyboard())
             await state.clear()
 
@@ -148,14 +148,14 @@ async def process_participant_question(message: types.Message, state: FSMContext
             result = await service.submit_result(test_id, message.from_user.id, answers)
             
             # Send result to participant
-            from app.bot.keyboards import get_main_keyboard
+            from bot.keyboards import get_main_keyboard
             score_text = UzbekTexts.FRIENDSHIP_RESULT.format(score=result.score)
             await message.answer(score_text, reply_markup=get_main_keyboard())
             
             # Notify owner
             owner_text = f"Kimdir do'stlik testingizni eson-omon tugatdi!\nNatija: {result.score}% 🏆"
             owner_id = data.get("owner_id")
-            from app.services.notifications import NotificationService
+            from services.notifications import NotificationService
             notif = NotificationService(bot)
             await notif.send_message(owner_id, owner_text)
             

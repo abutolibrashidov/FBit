@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional, List
 from sqlalchemy import BigInteger, String, Boolean, DateTime, ForeignKey, JSON, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from app.database.session import Base
+from database.session import Base
 
 class PollTemplate(Base):
     __tablename__ = "poll_templates"

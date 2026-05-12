@@ -7,9 +7,9 @@ from aiogram.types import Update
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from app.core.config import settings
-from app.bot.handlers import setup_handlers
-from app.api.admin import admin_router
+from core.config import settings
+from bot.handlers import setup_handlers
+from api.admin import admin_router
 
 # Logging setup
 logging.basicConfig(level=settings.LOG_LEVEL, stream=sys.stdout)

@@ -6,15 +6,15 @@ from datetime import datetime, date, timedelta
 from pydantic import BaseModel
 from jose import jwt, JWTError
 
-from app.database.session import get_db
-from app.core.config import settings
+from database.session import get_db
+from core.config import settings
 
-from app.modules.users.models import User
-from app.modules.analytics.models import AnalyticsEvent
-from app.modules.moderation.models import Report
-from app.modules.anonymous.models import AnonymousMessage
-from app.modules.friendship.models import FriendshipTestResult
-from app.modules.polls.models import PollAnswer
+from modules.users.models import User
+from modules.analytics.models import AnalyticsEvent
+from modules.moderation.models import Report
+from modules.anonymous.models import AnonymousMessage
+from modules.friendship.models import FriendshipTestResult
+from modules.polls.models import PollAnswer
 
 admin_router = APIRouter()
 bearer_scheme = HTTPBearer()
@@ -137,7 +137,7 @@ async def get_reports(db: AsyncSession = Depends(get_db), status: str = "pending
 
 @admin_router.post("/moderation", dependencies=[Depends(verify_admin_token)])
 async def execute_moderation(report_id: str, action: str, note: str = "", db: AsyncSession = Depends(get_db)):
-    from app.modules.moderation.services import ModerationService
+    from modules.moderation.services import ModerationService
     import uuid
     service = ModerationService(db)
     result = await service.execute_moderation_action(uuid.UUID(report_id), action, note)

@@ -2,9 +2,9 @@ from aiogram import Router, types, F
 from aiogram.fsm.context import FSMContext
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database.session import async_session
-from app.modules.inbox.services import InboxService
-from app.core.texts import UzbekTexts
+from database.session import async_session
+from modules.inbox.services import InboxService
+from core.texts import UzbekTexts
 
 router = Router()
 

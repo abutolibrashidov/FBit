@@ -3,10 +3,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.texts import UzbekTexts
-from app.modules.anonymous.services import AnonymousMessageService
-from app.database.session import async_session
-from app.services.notifications import NotificationService
+from core.texts import UzbekTexts
+from modules.anonymous.services import AnonymousMessageService
+from database.session import async_session
+from services.notifications import NotificationService
 
 router = Router()
 
@@ -35,9 +35,9 @@ async def process_anonymous_message(message: types.Message, state: FSMContext, b
     receiver_id = data.get("receiver_id")
     
     async with async_session() as session:
-        from app.modules.users.models import User
+        from modules.users.models import User
         user = await session.get(User, message.from_user.id)
-        from app.core.permissions import UXControlLayer
+        from core.permissions import UXControlLayer
         is_allowed, reason = UXControlLayer.check_global_action_block(user)
         if not is_allowed:
             await message.answer(reason)
@@ -45,7 +45,7 @@ async def process_anonymous_message(message: types.Message, state: FSMContext, b
             return
             
         if user:
-            from app.modules.moderation.services import ModerationService
+            from modules.moderation.services import ModerationService
             mod_service = ModerationService(session)
             if mod_service.check_text_toxicity(message.text):
                 user.risk_score += 10
@@ -53,7 +53,7 @@ async def process_anonymous_message(message: types.Message, state: FSMContext, b
         service = AnonymousMessageService(session)
         notif_service = NotificationService(bot)
         
-        from app.modules.analytics.services import AnalyticsService
+        from modules.analytics.services import AnalyticsService
         analytics = AnalyticsService(session)
         await analytics.track_event(message.from_user.id, "message_sent")
         
@@ -109,7 +109,7 @@ async def process_anon_report(message: types.Message, state: FSMContext):
         service = AnonymousMessageService(session)
         orig_msg = await service.get_message(msg_id)
         if orig_msg:
-            from app.modules.moderation.services import ModerationService
+            from modules.moderation.services import ModerationService
             mod = ModerationService(session)
             import uuid
             
@@ -120,7 +120,7 @@ async def process_anon_report(message: types.Message, state: FSMContext):
                 
             await mod.submit_report(m_id, orig_msg.receiver_id, orig_msg.sender_id, message.text)
             
-            from app.modules.analytics.services import AnalyticsService
+            from modules.analytics.services import AnalyticsService
             analytics = AnalyticsService(session)
             await analytics.track_event(message.from_user.id, "report_sent")
             

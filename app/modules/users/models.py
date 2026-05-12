@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from sqlalchemy import BigInteger, String, Boolean, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
-from app.database.session import Base
+from database.session import Base
 
 class User(Base):
     __tablename__ = "users"

@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import BigInteger, String, JSON, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column
-from app.database.session import Base
+from database.session import Base
 
 class AnalyticsEvent(Base):
     __tablename__ = "analytics_events"

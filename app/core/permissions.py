@@ -1,5 +1,5 @@
 from typing import Optional
-from app.modules.users.models import User
+from modules.users.models import User
 
 class UXControlLayer:
     """

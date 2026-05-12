@@ -2,10 +2,10 @@ import os
 from sqlalchemy import select, func, desc
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.anonymous.models import AnonymousMessage
-from app.modules.friendship.models import FriendshipTestResult, FriendshipTest
-from app.modules.polls.models import Poll, PollAnswer, PollTemplate
-from app.modules.users.models import User
+from modules.anonymous.models import AnonymousMessage
+from modules.friendship.models import FriendshipTestResult, FriendshipTest
+from modules.polls.models import Poll, PollAnswer, PollTemplate
+from modules.users.models import User
 
 class InboxService:
     def __init__(self, session: AsyncSession):

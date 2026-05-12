@@ -1,6 +1,6 @@
 from typing import Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.modules.analytics.models import AnalyticsEvent
+from modules.analytics.models import AnalyticsEvent
 
 class AnalyticsService:
     def __init__(self, session: AsyncSession):

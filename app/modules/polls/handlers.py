@@ -3,9 +3,9 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.texts import UzbekTexts
-from app.modules.polls.services import PollService
-from app.database.session import async_session
+from core.texts import UzbekTexts
+from modules.polls.services import PollService
+from database.session import async_session
 
 router = Router()
 
@@ -93,10 +93,10 @@ async def process_poll_answer(message: types.Message, state: FSMContext, bot):
         import uuid
         await service.submit_answer(uuid.UUID(poll_id_str), message.text, message.from_user.id)
         
-        from app.bot.keyboards import get_main_keyboard
+        from bot.keyboards import get_main_keyboard
         await message.answer("Sizning javobingiz qabul qilindi, rahmat! ✅", reply_markup=get_main_keyboard())
         
-        from app.services.notifications import NotificationService
+        from services.notifications import NotificationService
         notif = NotificationService(bot)
         owner_msg = f"Sizning \"{question_text}\" so'rovnomangizga yangi anonim javob keldi:\n\n💬 {message.text}"
         await notif.send_message(owner_id, owner_msg)
