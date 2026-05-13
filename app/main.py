@@ -44,15 +44,31 @@ async def lifespan(app: FastAPI):
 app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
 
 from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "https://fbitbot.netlify.app",
+    "https://fbit-1.onrender.com",
+    "http://localhost:5173",
+    "http://localhost:3000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(admin_router, prefix="/admin")
+
+@app.get("/")
+async def root():
+    return {"status": "running"}
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
 
 @app.post("/webhook")
 async def telegram_webhook(request: Request):

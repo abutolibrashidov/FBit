@@ -15,7 +15,7 @@ export default function Login() {
         setError('');
         setLoading(true);
         try {
-            const res = await api.post('/login', { username, password });
+            const res = await api.post('/admin/login', { username, password });
             setAuthToken(res.data.token);
             navigate('/');
         } catch (err) {
