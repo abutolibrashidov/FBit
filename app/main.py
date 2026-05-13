@@ -46,6 +46,7 @@ app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
 from fastapi.middleware.cors import CORSMiddleware
 
 origins = [
+    "https://stately-dasik-06db05.netlify.app",
     "https://fbitbot.netlify.app",
     "https://fbit-1.onrender.com",
     "http://localhost:5173",
