@@ -11,7 +11,7 @@ export default function Moderation() {
 
     const fetchReports = () => {
         setLoading(true);
-        api.get('/reports')
+        api.get('/admin/reports')
            .then(res => setReports(res.data))
            .catch(console.error)
            .finally(() => setLoading(false));
@@ -19,7 +19,7 @@ export default function Moderation() {
 
     const handleAction = async (reportId, action) => {
         try {
-            await api.post(`/moderation?report_id=${reportId}&action=${action}`);
+            await api.post(`/admin/moderation?report_id=${reportId}&action=${action}`);
             fetchReports();
         } catch (e) {
             console.error(e);

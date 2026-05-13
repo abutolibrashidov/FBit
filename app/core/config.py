@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     # App Configuration
     APP_NAME: str = "Telegram Social Platform"
     DEBUG: bool = False
-    BASE_URL: str = "https://your-domain.vercel.app"
+    BASE_URL: str = ""
 
     # Database Configuration
     DATABASE_URL: str

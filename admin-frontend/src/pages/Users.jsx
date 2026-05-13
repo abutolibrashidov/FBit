@@ -12,7 +12,7 @@ export default function Users() {
 
     const fetchUsers = () => {
         setLoading(true);
-        api.get('/users?limit=100')
+        api.get('/admin/users?limit=100')
            .then(res => setUsers(res.data))
            .catch(console.error)
            .finally(() => setLoading(false));
@@ -22,9 +22,9 @@ export default function Users() {
         setActionLoading(userId + '-ban');
         try {
             if (isBanned) {
-                await api.post(`/users/${userId}/unban`);
+                await api.post(`/admin/users/${userId}/unban`);
             } else {
-                await api.post(`/users/${userId}/ban`);
+                await api.post(`/admin/users/${userId}/ban`);
             }
             fetchUsers();
         } catch (e) {
@@ -38,7 +38,7 @@ export default function Users() {
     const handleMute = async (userId) => {
         setActionLoading(userId + '-mute');
         try {
-            await api.post(`/users/${userId}/mute?hours=24`);
+            await api.post(`/admin/users/${userId}/mute?hours=24`);
             fetchUsers();
         } catch (e) {
             console.error(e);

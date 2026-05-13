@@ -65,10 +65,12 @@ app.include_router(admin_router, prefix="/admin")
 
 @app.get("/")
 async def root():
-    return {"status": "running"}
+    """Root endpoint for status verification."""
+    return {"status": "running", "app": settings.APP_NAME}
 
 @app.get("/health")
 async def health_check():
+    """Health check for deployment monitoring."""
     return {"status": "healthy"}
 
 @app.post("/webhook")
@@ -83,11 +85,9 @@ async def telegram_webhook(request: Request):
         logger.error(f"Error processing webhook: {e}")
         return JSONResponse(content={"error": str(e)}, status_code=500)
 
-@app.get("/health")
-async def health_check():
-    return {"status": "alive"}
-
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    import os
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=(settings.LOG_LEVEL == "DEBUG"))

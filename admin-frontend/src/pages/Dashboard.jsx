@@ -10,7 +10,7 @@ export default function Dashboard() {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        api.get('/analytics').then(res => setData(res.data)).catch(console.error);
+        api.get('/admin/analytics').then(res => setData(res.data)).catch(console.error);
     }, []);
 
     if (!data) return <div className="page-title">Loading...</div>;
